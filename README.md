@@ -14,5 +14,6 @@ GIT01
 При этом никакие файлы/дирректории в исключения для игнорирования не были добавлены - то есть все файлы, подпадающие под маски, перечисленные выше - будут проигнорированы git'ом.
 
 
-
+GIT02
  Another line added
+ And one more line added for commit and push directly from IDE
