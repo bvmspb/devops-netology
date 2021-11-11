@@ -53,9 +53,9 @@
         ```
 
 
-[файл конфигурации vagrant](./homework_03_sysadmin_01_terminal.md)
+[файл конфигурации vagrant](./vagrant/Vagrantfile)
 
-    Создал директорию vagrant в папке с проектом devops-netology и отредактировал [файл конфигурации](https://github.com/bvmspb/devops-netology/blob/main/homework_03_sysadmin_01_terminal.md), полученный после init'а:
+    Создал директорию vagrant в папке с проектом devops-netology и отредактировал [файл конфигурации](https://github.com/bvmspb/devops-netology/blob/main/vagrant/Vagrantfile), полученный после init'а:
     C:\Users\vbaksheev\PycharmProjects\netology.devops\devops-netology>mkdir vagrant
     
     C:\Users\vbaksheev\PycharmProjects\netology.devops\devops-netology>cd vagrant
