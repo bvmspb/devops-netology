@@ -281,4 +281,3 @@
     
     C:\Users\vbaksheev\PycharmProjects\netology.devops\devops-netology\vagrant>
 
- 
