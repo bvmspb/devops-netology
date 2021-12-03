@@ -2,7 +2,7 @@
 
 ##Netology, DevOps engineer training 2021-2022. Personal repository of student Baksheev Vladimir
 
-###DEVSYS-PDC-2 sysadmin 03.06 Vladimir Baksheev / Владимир Бакшеев Домашнее задание к занятию «3.7. Компьютерные сети, лекция 2»
+###DEVSYS-PDC-2 sysadmin 03.07 Vladimir Baksheev / Владимир Бакшеев Домашнее задание к занятию «3.7. Компьютерные сети, лекция 2»
 
 # Домашнее задание к занятию "3.7. Компьютерные сети, лекция 2"
 
