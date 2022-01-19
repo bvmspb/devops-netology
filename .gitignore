@@ -7,3 +7,6 @@ vagrant/**
 /terraform/
 ./terraform/**
 ./terraform/
+**/.idea/**
+.idea/**
+**/.idea
