@@ -97,7 +97,7 @@ bvm@RU1L0605:~/hw05_04/packer$ yc compute image list
 - Скриншот страницы свойств созданной ВМ, как на примере ниже:
 
 <p align="center">
-  <img width="1200" height="600" src="./assets/yc_01.png">
+  <img width="1200" height="600" src="https://github.com/netology-code/virt-homeworks/raw/virt-11/05-virt-04-docker-compose/assets/yc_01.png">
 </p>
 
 ```answer2
@@ -267,10 +267,10 @@ node01.netology.cloud      : ok=12   changed=10   unreachable=0    failed=0    s
 Для получения зачета, вам необходимо предоставить:
 - Скриншот работающего веб-интерфейса Grafana с текущими метриками, как на примере ниже
 <p align="center">
-  <img width="1200" height="600" src="./assets/yc_02.png">
+  <img width="1200" height="600" src="https://github.com/netology-code/virt-homeworks/raw/virt-11/05-virt-04-docker-compose/assets/yc_02.png">
 </p>
 
-```answer1
+```answer3
 Все шаги по запуску необходимых сервисов вместе с новой ВМ в облаке yc 
 выпололнил на этапе выполнения задания 2. 
 Сделал скриншоты и ввыполнил команду destroy для terraform.
