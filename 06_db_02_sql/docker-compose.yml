@@ -1,0 +1,17 @@
+version: '3'
+services:
+  postgres:
+    image: postgres:12
+    restart: always
+    environment:
+           POSTGRES_DB: "testdb"
+           POSTGRES_USER: "postgres"
+           POSTGRES_PASSWORD: "postgres"
+           PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ./volume:/var/lib/postgresql/data
+      - ./backup:/tmp/backup
+        #      - /var/run/postgresql/:var/run/postgresql  
+    ports:
+      - "5432:5432"
+
