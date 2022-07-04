@@ -11,3 +11,5 @@ vagrant/**
 .idea/**
 **/.idea
 05_02/**
+06_db_04_postgresql/backup/**
+06_db_04_postgresql/volume/**
