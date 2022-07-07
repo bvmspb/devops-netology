@@ -219,6 +219,7 @@ locals {
      prod
    * stage
 ```
+[terraform](https://github.com/bvmspb/devops-netology/tree/main/terraform/07_03)
 
 * Вывод команды `terraform plan` для воркспейса `prod`.  
 
@@ -629,5 +630,8 @@ Plan: 6 to add, 0 to change, 0 to destroy.
    
    Destroy complete! Resources: 5 destroyed.
 ```
-[Скриншот](https://github.com/bvmspb/devops-netology/tree/main/images/2022-07-07 18-32-33.png): ![Скриншот](images/2022-07-07 18-32-33.png)
+[Скриншот](https://github.com/bvmspb/devops-netology/tree/main/images/2022-07-07_18-32-33.png): ![Скриншот](images/2022-07-07_18-32-33.png)
+[terraform](https://github.com/bvmspb/devops-netology/tree/main/terraform/07_03)
+
+
 ---
