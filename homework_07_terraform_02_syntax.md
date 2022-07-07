@@ -95,6 +95,8 @@ AWS предоставляет достаточно много бесплатн�
 
 2. Ссылку на репозиторий с исходной конфигурацией терраформа.  
 
+[terraform](https://github.com/bvmspb/devops-netology/tree/main/terraform)
+
 ```answer1-2
    bvm@bvm-HP-EliteBook-8470p:~/netology/devops-netology$ mkdir terraform
    bvm@bvm-HP-EliteBook-8470p:~/netology/devops-netology$ cd terraform/
@@ -434,6 +436,6 @@ AWS предоставляет достаточно много бесплатн�
    
    Destroy complete! Resources: 4 destroyed.
 ```
-
+[terraform](https://github.com/bvmspb/devops-netology/tree/main/terraform)
  
 ---
