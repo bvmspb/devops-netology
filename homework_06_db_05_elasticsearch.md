@@ -133,6 +133,7 @@
 path:
     data: /var/lib/elasticsearch
     logs: /var/log/elasticsearch
+    repo: /usr/share/elasticsearch
 
 node:
     name: netology_test
