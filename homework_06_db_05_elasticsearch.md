@@ -414,4 +414,8 @@ green open test             YRDwKs68QdOI150VEVkGuA 1 0  0 0   226b   226b
     изменить нельзя.
 ```
 
+[Dockerfile](https://github.com/bvmspb/devops-netology/blob/main/06_db_05_elasticsearch/Dockerfile)
+
+[elasticsearch.yml](https://github.com/bvmspb/devops-netology/blob/main/06_db_05_elasticsearch/elasticsearch.yml)
+
 ---
