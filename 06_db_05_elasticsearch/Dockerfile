@@ -17,3 +17,9 @@ FROM docker.elastic.co/elasticsearch/elasticsearch:7.17.5@sha256:76344d5f89b1314
 # See https://github.com/docker-library/official-images/pull/4916 for more details.
 
 COPY --chown=elasticsearch:elasticsearch elasticsearch.yml /usr/share/elasticsearch/config/
+
+RUN mkdir /var/lib/elasticsearch
+RUN chown -R elasticsearch:elasticsearch /var/lib/elasticsearch
+
+RUN mkdir /var/log/elasticsearch
+RUN chown -R elasticsearch:elasticsearch /var/log/elasticsearch
