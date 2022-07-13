@@ -324,42 +324,94 @@ root@c95466339948:/usr/share/elasticsearch# chown elasticsearch:elasticsearch /u
 **Приведите в ответе** запрос API и результат вызова API для создания репозитория.
 
 ```bash
-root@c95466339948:/usr/share/elasticsearch# curl -X PUT "localhost:9200/_snapshot/netology_backup?pretty" -H 'Content-Type: application/json' -d'{  "type": "fs",  "settings": {    "location":"/usr/share/elasticsearch/snapshots"  }}'
+bvm@bvm-HP-EliteBook-8470p:~$ curl -X PUT "localhost:9200/_snapshot/netology_backup?pretty" -H 'Content-Type: application/json' -d'{  "type": "fs",  "settings": {    "location":"/usr/share/elasticsearch/snapshots"  }}'
 {
-  "error" : {
-    "root_cause" : [
-      {
-        "type" : "repository_exception",
-        "reason" : "[netology_backup] location [/usr/share/elasticsearch/snapshots] doesn't match any of the locations specified by path.repo because this setting is empty"
-      }
-    ],
-    "type" : "repository_exception",
-    "reason" : "[netology_backup] failed to create repository",
-    "caused_by" : {
-      "type" : "repository_exception",
-      "reason" : "[netology_backup] location [/usr/share/elasticsearch/snapshots] doesn't match any of the locations specified by path.repo because this setting is empty"
-    }
-  },
-  "status" : 500
+  "acknowledged" : true
 }
 
 ```
 
 Создайте индекс `test` с 0 реплик и 1 шардом и **приведите в ответе** список индексов.
 
+```bash
+bvm@bvm-HP-EliteBook-8470p:~$ curl -X PUT "localhost:9200/test?pretty" -H 'Content-Type: application/json' -d'{  "settings": {    "index": {      "number_of_shards": 1,        "number_of_replicas": 0     }  }}'
+{
+  "acknowledged" : true,
+  "shards_acknowledged" : true,
+  "index" : "test"
+}
+bvm@bvm-HP-EliteBook-8470p:~$ curl -X GET "localhost:9200/_cat/indices?pretty"
+green open .geoip_databases xYj0wj0ZQX6uR1omhKTBIw 1 0 40 0 37.7mb 37.7mb
+green open test             Rw2Fw16OTeS8IGcYokJOTA 1 0  0 0   226b   226b
+
+```
+
 [Создайте `snapshot`](https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshots-take-snapshot.html) 
 состояния кластера `elasticsearch`.
 
+```bash
+bvm@bvm-HP-EliteBook-8470p:~$ curl -X PUT "localhost:9200/_snapshot/netology_backup/snapshot?pretty"
+{
+  "accepted" : true
+}
+```
+
 **Приведите в ответе** список файлов в директории со `snapshot`ами.
 
+```bash
+root@929f88ccbd00:/usr/share/elasticsearch# ls snapshots/ -l
+total 48
+-rw-rw-r-- 1 elasticsearch root  1420 Jul 13 18:00 index-0
+-rw-rw-r-- 1 elasticsearch root     8 Jul 13 18:00 index.latest
+drwxrwxr-x 6 elasticsearch root  4096 Jul 13 18:00 indices
+-rw-rw-r-- 1 elasticsearch root 29282 Jul 13 18:00 meta-tvgIPGZHQVmsGKtk7ATwtA.dat
+-rw-rw-r-- 1 elasticsearch root   707 Jul 13 18:00 snap-tvgIPGZHQVmsGKtk7ATwtA.dat
+
+```
+
 Удалите индекс `test` и создайте индекс `test-2`. **Приведите в ответе** список индексов.
+
+```bash
+root@929f88ccbd00:/usr/share/elasticsearch# curl -X DELETE "localhost:9200/test?pretty"
+{
+  "acknowledged" : true
+}
+root@929f88ccbd00:/usr/share/elasticsearch# curl -X PUT "localhost:9200/test-2?pretty" -H 'Content-Type: application/json' -d'{  "settings": {    "index": {      "number_of_shards": 1,        "number_of_replicas": 0     }  }}'
+{
+  "acknowledged" : true,
+  "shards_acknowledged" : true,
+  "index" : "test-2"
+}
+root@929f88ccbd00:/usr/share/elasticsearch# curl -X GET "localhost:9200/_cat/indices?pretty"
+green open .geoip_databases xYj0wj0ZQX6uR1omhKTBIw 1 0 40 0 37.7mb 37.7mb
+green open test-2           FyKJQzKuSRmXbM6Az8v5aw 1 0  0 0   226b   226b
+
+```
 
 [Восстановите](https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshots-restore-snapshot.html) состояние
 кластера `elasticsearch` из `snapshot`, созданного ранее. 
 
 **Приведите в ответе** запрос к API восстановления и итоговый список индексов.
 
+```bash
+root@929f88ccbd00:/usr/share/elasticsearch# curl -X POST "localhost:9200/_snapshot/netology_backup/snapshot/_restore?pretty" -H 'Content-Type: application/json' -d'{  "indices": "test",  "include_global_state": true}'
+{
+  "accepted" : true
+}
+root@929f88ccbd00:/usr/share/elasticsearch# curl -X GET "localhost:9200/_cat/indices?pretty"
+green open .geoip_databases 0S8HwPacRQ6G53031mbo4w 1 0 40 0 37.7mb 37.7mb
+green open test-2           FyKJQzKuSRmXbM6Az8v5aw 1 0  0 0   226b   226b
+green open test             YRDwKs68QdOI150VEVkGuA 1 0  0 0   226b   226b
+
+```
+
 Подсказки:
 - возможно вам понадобится доработать `elasticsearch.yml` в части директивы `path.repo` и перезапустить `elasticsearch`
+
+```answer3
+    Да, так и оказалось - потребовалось включить и этот параметр в 
+    конфигурационный файл и перезапустить, т.к. на лету такой параметр 
+    изменить нельзя.
+```
 
 ---
