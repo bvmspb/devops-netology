@@ -1,6 +1,7 @@
 path:
     data: /var/lib/elasticsearch
     logs: /var/log/elasticsearch
+    path.repo: /usr/share/elasticsearch
 
 node:
     name: netology_test

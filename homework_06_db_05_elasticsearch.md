@@ -95,12 +95,90 @@
         Digest: sha256:a6c20c6b69a1e3dcb9c14670d98b8ab991aeb5c7ea3978dbf978d710e6a3fde1
         Status: Downloaded newer image for bvmspb/homeworks:hw_06_db_05_elastic
         docker.io/bvmspb/homeworks:hw_06_db_05_elastic
+        bvm@bvm-HP-EliteBook-8470p:~/netology/devops-netology$ sudo docker run --name elastic --rm -d -t -p 9200:9200 -p 9300:9300 bvmspb/homeworks:hw_06_db_05_elastic
+        c95466339948d7d3cb6c139db5b0bf3722b20f1033930c5e306eaf8ae7e1e53c
 
 ```
 
 - составьте Dockerfile-манифест для elasticsearch
+
+```answer1-5
+    # Elasticsearch 7.17.5
+    
+    # This image re-bundles the Docker image from the upstream provider, Elastic.
+    FROM docker.elastic.co/elasticsearch/elasticsearch:7.17.5@sha256:76344d5f89b13147743db0487eb76b03a7f9f0cd55abe8ab887069711f2ee27d
+    # Supported Bashbrew Architectures: amd64 arm64v8
+    
+    # The upstream image was built by:
+    #   https://github.com/elastic/dockerfiles/tree/v7.17.5/elasticsearch
+    
+    # The build can be reproduced locally via:
+    #   docker build 'https://github.com/elastic/dockerfiles.git#v7.17.5:elasticsearch'
+    
+    # For a full list of supported images and tags visit https://www.docker.elastic.co
+    
+    # For Elasticsearch documentation visit https://www.elastic.co/guide/en/elasticsearch/reference/current/docker.html
+    
+    # See https://github.com/docker-library/official-images/pull/4916 for more details.
+    
+    COPY --chown=elasticsearch:elasticsearch elasticsearch.yml /usr/share/elasticsearch/config/
+    
+    RUN mkdir /var/lib/elasticsearch
+    RUN chown -R elasticsearch:elasticsearch /var/lib/elasticsearch
+    
+    RUN mkdir /var/log/elasticsearch
+    RUN chown -R elasticsearch:elasticsearch /var/log/elasticsearch
+```
+```yaml
+path:
+    data: /var/lib/elasticsearch
+    logs: /var/log/elasticsearch
+
+node:
+    name: netology_test
+network:
+    host: 0.0.0.0
+
+discovery:
+    type: single-node
+
+```
 - соберите docker-образ и сделайте `push` в ваш docker.io репозиторий
+
+```bash
+sudo docker build -t hw_06_db_05_elastic .
+sudo docker tag hw_06_db_05_elastic bvmspb/homeworks:hw_06_db_05_elastic
+sudo docker push bvmspb/homeworks:hw_06_db_05_elastic
+
+```
+
 - запустите контейнер из получившегося образа и выполните запрос пути `/` c хост-машины
+
+```bash
+sudo docker pull bvmspb/homeworks:hw_06_db_05_elastic
+sudo docker run --name elastic --rm -d -t -p 9200:9200 -p 9300:9300 bvmspb/homeworks:hw_06_db_05_elastic
+
+```
+```answer1-6
+    bvm@bvm-HP-EliteBook-8470p:~/netology/devops-netology$ curl localhost:9200/
+    {
+      "name" : "netology_test",
+      "cluster_name" : "elasticsearch",
+      "cluster_uuid" : "0rVWKNs-RoOKT6YoBxcr_A",
+      "version" : {
+        "number" : "7.17.5",
+        "build_flavor" : "default",
+        "build_type" : "docker",
+        "build_hash" : "8d61b4f7ddf931f219e3745f295ed2bbc50c8e84",
+        "build_date" : "2022-06-23T21:57:28.736740635Z",
+        "build_snapshot" : false,
+        "lucene_version" : "8.11.1",
+        "minimum_wire_compatibility_version" : "6.8.0",
+        "minimum_index_compatibility_version" : "6.0.0-beta1"
+      },
+      "tagline" : "You Know, for Search"
+    }
+```
 
 Требования к `elasticsearch.yml`:
 - данные `path` должны сохраняться в `/var/lib` 
@@ -108,8 +186,21 @@
 
 В ответе приведите:
 - текст Dockerfile манифеста
+
+```answer1-7
+    Сделано выше
+```
+
 - ссылку на образ в репозитории dockerhub
+
+[hw_06_db_05_elastic](https://hub.docker.com/layers/252877488/bvmspb/homeworks/hw_06_db_05_elastic/images/sha256-07e2090b6bdc46a86826babf2662b05834f5979da34d04e01760c01a145a81f9?context=repo)
+[bvmspb/homeworks](https://hub.docker.com/repository/docker/bvmspb/homeworks)
+
 - ответ `elasticsearch` на запрос пути `/` в json виде
+
+```answer1-8
+    Сделано выше
+```
 
 Подсказки:
 - при сетевых проблемах внимательно изучите кластерные и сетевые настройки в elasticsearch.yml
@@ -137,13 +228,70 @@
 | ind-2 | 1 | 2 |
 | ind-3 | 2 | 4 |
 
+```answer2-1
+bvm@bvm-HP-EliteBook-8470p:~/netology/devops-netology$ curl -X PUT "http://localhost:9200/ind-1" -H 'Content-Type: application/json' -d '{ "settings": { "number_of_shards": 1, "number_of_replicas": 0 }}'
+bvm@bvm-HP-EliteBook-8470p:~/netology/devops-netology$ curl -X PUT "http://localhost:9200/ind-2" -H 'Content-Type: application/json' -d '{ "settings": { "number_of_shards": 2, "number_of_replicas": 1 }}'
+{"acknowledged":true,"shards_acknowledged":true,"index":"ind-2"}
+bvm@bvm-HP-EliteBook-8470p:~/netology/devops-netology$ curl -X PUT "http://localhost:9200/ind-3" -H 'Content-Type: application/json' -d '{ "settings": { "number_of_shards": 4, "number_of_replicas": 2 }}'
+{"acknowledged":true,"shards_acknowledged":true,"index":"ind-3"}
+```
+
 Получите список индексов и их статусов, используя API и **приведите в ответе** на задание.
+
+[cat indices API](https://www.elastic.co/guide/en/elasticsearch/reference/8.3/cat-indices.html)
+```bash
+bvm@bvm-HP-EliteBook-8470p:~/netology/devops-netology$ curl -X GET http://localhost:9200/_cat/indices
+green  open .geoip_databases pK5DlfzzSNCtoJeW0Bkm-Q 1 0 40 0 37.7mb 37.7mb
+green  open ind-1            O4wKu1F0QYyfAL7iQ1VV4w 1 0  0 0   226b   226b
+yellow open ind-3            KMT7-fc9Rsmnr-j6frRmUw 4 2  0 0   904b   904b
+yellow open ind-2            iDpjbPqWQdqrECyhlsirCA 2 1  0 0   452b   452b
+
+```
 
 Получите состояние кластера `elasticsearch`, используя API.
 
+[Cluster health API](https://www.elastic.co/guide/en/elasticsearch/reference/8.3/cluster-health.html)
+```bash
+bvm@bvm-HP-EliteBook-8470p:~/netology/devops-netology$ curl -X GET "localhost:9200/_cluster/health?pretty"
+{
+  "cluster_name" : "elasticsearch",
+  "status" : "yellow",
+  "timed_out" : false,
+  "number_of_nodes" : 1,
+  "number_of_data_nodes" : 1,
+  "active_primary_shards" : 10,
+  "active_shards" : 10,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 10,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 50.0
+}
+
+```
+
 Как вы думаете, почему часть индексов и кластер находится в состоянии yellow?
 
+```answer2-2
+По информации из Интернета - реплика не распределена по всем нодам 
+кластера, либо в кластере только одна нода - все работает, но есть риск, 
+потому и желтый цвет. В нашем случае как раз одна только нода в кластере.
+```
+[Ссылка](http://chrissimpson.co.uk/elasticsearch-yellow-cluster-status-explained.html)
+
 Удалите все индексы.
+
+```bash
+bvm@bvm-HP-EliteBook-8470p:~/netology/devops-netology$ curl -X DELETE "localhost:9200/*"
+{"acknowledged":true} 
+bvm@bvm-HP-EliteBook-8470p:~/netology/devops-netology$ curl -X GET http://localhost:9200/_cat/indices
+green open .geoip_databases pK5DlfzzSNCtoJeW0Bkm-Q 1 0 40 0 37.7mb 37.7mb
+bvm@bvm-HP-EliteBook-8470p:~/netology/devops-netology$ 
+
+```
 
 **Важно**
 
@@ -158,10 +306,43 @@
 
 Создайте директорию `{путь до корневой директории с elasticsearch в образе}/snapshots`.
 
+```bash
+bvm@bvm-HP-EliteBook-8470p:~/netology/devops-netology$ sudo exec -i -t elastic bash
+sudo: exec: command not found
+bvm@bvm-HP-EliteBook-8470p:~/netology/devops-netology$ sudo docker exec -i -t elastic bash
+root@c95466339948:/usr/share/elasticsearch# which elasticsearch
+/usr/share/elasticsearch/bin/elasticsearch
+root@c95466339948:/usr/share/elasticsearch# mkdir /usr/share/elasticsearch/snapshots
+root@c95466339948:/usr/share/elasticsearch# chown elasticsearch:elasticsearch /usr/share/elasticsearch/snapshots/
+
+```
+
 Используя API [зарегистрируйте](https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshots-register-repository.html#snapshots-register-repository) 
 данную директорию как `snapshot repository` c именем `netology_backup`.
 
 **Приведите в ответе** запрос API и результат вызова API для создания репозитория.
+
+```bash
+root@c95466339948:/usr/share/elasticsearch# curl -X PUT "localhost:9200/_snapshot/netology_backup?pretty" -H 'Content-Type: application/json' -d'{  "type": "fs",  "settings": {    "location":"/usr/share/elasticsearch/snapshots"  }}'
+{
+  "error" : {
+    "root_cause" : [
+      {
+        "type" : "repository_exception",
+        "reason" : "[netology_backup] location [/usr/share/elasticsearch/snapshots] doesn't match any of the locations specified by path.repo because this setting is empty"
+      }
+    ],
+    "type" : "repository_exception",
+    "reason" : "[netology_backup] failed to create repository",
+    "caused_by" : {
+      "type" : "repository_exception",
+      "reason" : "[netology_backup] location [/usr/share/elasticsearch/snapshots] doesn't match any of the locations specified by path.repo because this setting is empty"
+    }
+  },
+  "status" : 500
+}
+
+```
 
 Создайте индекс `test` с 0 реплик и 1 шардом и **приведите в ответе** список индексов.
 
